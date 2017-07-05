@@ -1,23 +1,33 @@
 <?php
-require_once './Includes/Partials/header.php';
-  require_once('core/autoLoadClass.php');
+	require_once './Includes/Partials/header.php';
+  require_once './Database/dbHelper.php';
+	if(isset($_GET['poll']) && !empty($_GET['poll'])){
+	$dbHelp = new dbHelp;
+  $link = $_GET['poll'];
+  $question = $dbHelp->select("question","Question",array("questionID"=>$link));
+  if(empty($question)){
+    redirect::to(404);
+  }
+  $answer = $dbHelp->select("answer","Answers",array("questionID"=>$link));
+  print_r($answer);
 ?>
+<form>
 <fieldset>
-  <legend>text here!</legend>
-  <label for="accessible">
-    <input type="radio" value="pretty" name="quality" id="accessible"> <span>ravi</span>
+  <legend><?=$question[0]["question"]?></legend>
+  <?php
+    foreach ($answer as $key => $value){
+  ?>
+  <label >
+    <input type="radio"  name="userAnswer" > <span><?=$value['answer']?></span>
   </label>
-
-  <label for="pretty">
-    <input type="radio" value="pretty" name="quality" id="pretty"> <span>hmmm..</span>
-  </label>
-
-  <label for="accessible-and-pretty">
-    <input type="radio" value="pretty"  name="quality" id="accessible-and-pretty" > <span>KI!!!</span>
-  </label>
+  <?php
+    }
+  ?>
 </fieldset>
 <input type="submit" name="submit" class="voteButton" value="Vote">
+</form>
 <?php
+}
 	require_once './Includes/Partials/footer.php';
 ?>
 
