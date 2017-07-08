@@ -119,3 +119,11 @@ input{
 .answer:active{
   border-bottom:3px solid #008000;
 }
+.link{
+  spellcheck:"false";
+  outline: none;
+  color: rgba(10, 10, 130, 0.74);
+  margin:0px 0px 20px 30px;
+  font-size:20px;
+  border:2px solid black;
+}

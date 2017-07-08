@@ -1,6 +1,7 @@
 
 <?php
 require_once './Includes/Partials/header.php';
+require_once './func/functions.php';
 ?>
 <form action="Handlers/createPoll.php" method="POST" >
 <fieldset>
