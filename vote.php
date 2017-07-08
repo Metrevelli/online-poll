@@ -3,7 +3,7 @@
   require_once './Database/dbHelper.php';
 	if(isset($_GET['poll']) && !empty($_GET['poll'])){
 	$dbHelp = new dbHelp;
-  $link = $_GET['poll'];
+  $link = intval($_GET['poll'],36);
   $question = $dbHelp->select("question","Question",array("questionID"=>$link));
   if(empty($question)){
     redirect::to(404);

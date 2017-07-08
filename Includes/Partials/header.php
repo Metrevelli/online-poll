@@ -6,6 +6,6 @@
 	<script src="js/main.js"></script>
 </head>
 <?php
-  require_once('core/autoLoadClass.php');
+  require_once './core/autoLoadClass.php';
 ?>
 <body>
