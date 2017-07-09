@@ -1,10 +1,20 @@
+<?php
+  require_once './core/autoLoadClass.php';
+    require_once './Database/dbHelper.php';
+    $questionID = base_convert($_GET["result"],36,10);
+    $dbHelp = new dbHelp;
+    $userAnswersAndCount = $dbHelp->select("Answers.answer,COUNT(userAnswers.userAnswerID) AS answerCount,Answers.questionID as questionID","Answers INNER JOIN userAnswers ON Answers.answerID = userAnswers.answerID GROUP BY Answers.answerID HAVING Answers.questionID = $questionID");
+    $question = $dbHelp->select("question","Question",array("questionID"=>$questionID));
 
+    // print_r($userAnswersAndCount);
+?>
 <html>
   <head>
-<h1>Results</h1>
     <!--Load the AJAX API-->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="vendor/components/jquery/jquery.js"></script>
     <script type="text/javascript">
+
 
       // Load the Visualization API and the corechart package.
       google.charts.load('current', {'packages':['corechart']});
@@ -22,20 +32,18 @@
         data.addColumn('string', 'Topping');
         data.addColumn('number', 'Slices');
         data.addRows([
-          ['Mushrooms', 3],
-          ['Onions', 1],
-          ['Olives', 1],
-          ['Zucchini', 1],
-          ['Zucchsasini', 3],
-          ['me', 5],
-          ['Pepperoni', 2]
+          <?php
+            foreach ($userAnswersAndCount as $key => $value) {
+              echo "['".$value["answer"]."',".$value['answerCount']."],";
+            }
+          ?>
         ]);
 
         // Set chart options
-        var options = {'title':'How Much Pizza I Ate Last Night',
+        var options = {'title':<?php echo "'".$question[0]["question"]."'" ?>,
                        'width':900,
                        'height':700,
-                        'colors':['#142B33', '#8C5261', '#3E6F7F', '#4C491E', '#CCC559'],
+                        // 'colors':['#142B33', '#8C5261', '#3E6F7F', '#4C491E', '#CCC559'],
                         'is3D':true
                      };
 
@@ -49,7 +57,7 @@
   <body>
   <center>
     <!--Div that will hold the pie chart-->
-    <div id="chart_div" style="margin-left:17%"></div>
+    <div id="chart_div" style="margin-left:16%"></div>
     </center>
   </body>
 </html>

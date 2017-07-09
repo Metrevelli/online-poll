@@ -9,7 +9,7 @@
     redirect::to(404);
   }
   $answer = $dbHelp->select("answerID,answer","Answers",array("questionID"=>$link));
-  print_r($answer);
+
 ?>
 <form method="POST" action="Handlers/insetVote.php">
 <fieldset>

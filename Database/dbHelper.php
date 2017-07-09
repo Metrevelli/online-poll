@@ -25,7 +25,7 @@ class dbHelp{
 			return $stmt->execute($insertKeyValueArray) ? $this->connect->lastInsertId('questionID') : FALSE;
 		}
 	}
-	 function select($what = "*",$table,$fields = []){
+	function select($what = "*",$table,$fields = []){
 		if(!empty($table)){
 			$selectKeyValueArray = array();
 			$keysForWhere = '';
@@ -36,11 +36,14 @@ class dbHelp{
 			$stmt = $this->connect->prepare("SELECT $what FROM $table $where");
 			$stmt->execute($selectKeyValueArray);
 			$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			// $stmt->debugDumpParams();
+			// die();
 			return $rows;
 		}
 	}
 	 function getWhere($array){
-        $where = ' WHERE';
+
+        $where = !empty($array) ? ' WHERE' : '';
         foreach($array as $key => $value){
             $where .= ' '.$key.' =:'.$key.' AND';
         }
