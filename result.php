@@ -1,12 +1,10 @@
 <?php
   require_once './core/autoLoadClass.php';
     require_once './Database/dbHelper.php';
-    $questionID = base_convert($_GET["result"],36,10);
+    $questionID = base_convert($_GET["poll"],36,10);
     $dbHelp = new dbHelp;
     $userAnswersAndCount = $dbHelp->select("Answers.answer,COUNT(userAnswers.userAnswerID) AS answerCount,Answers.questionID as questionID","Answers INNER JOIN userAnswers ON Answers.answerID = userAnswers.answerID GROUP BY Answers.answerID HAVING Answers.questionID = $questionID");
     $question = $dbHelp->select("question","Question",array("questionID"=>$questionID));
-
-    // print_r($userAnswersAndCount);
 ?>
 <html>
   <head>
