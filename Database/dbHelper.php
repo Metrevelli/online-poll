@@ -4,6 +4,7 @@ class dbHelp{
 	function __construct(){
 		try {
 	$this->connect = new PDO('mysql:host=localhost;dbname=poll;charset=utf8', 'root', '8zxrknec');
+	$this->connect->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 		} catch (PDOException $e) {
 			    print "Error!: " . $e->getMessage() . "<br/>";
     			die("Oops something went wrong!");
@@ -36,16 +37,33 @@ class dbHelp{
 			$stmt = $this->connect->prepare("SELECT $what FROM $table $where");
 			$stmt->execute($selectKeyValueArray);
 			$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			// $stmt->debugDumpParams();
-			// die();
 			return $rows;
 		}
 	}
-	 function getWhere($array){
+	function update($table,$array,$fields = []){
+		$keys = '';
+		$keysForValues = '';
+		$insertKeyValueArray = array();
+		foreach($array as $key => $value){
+            $keys .= $key . "=:".$key .',';
+            $insertKeyValueArray[":".$key] = $value;
+    	}
+    	$keys = rtrim($keys, ', ');
+		$where = $this->getWhere($fields,true);
+		$stmt = $this->connect->prepare("UPDATE $table set $keys $where");
+		$stmt->execute($insertKeyValueArray);
+		$updatedRows = $stmt->rowCount();
+		return $updatedRows;
+	}
+	function getWhere($array,$forUpdate = false){
 
         $where = !empty($array) ? ' WHERE' : '';
         foreach($array as $key => $value){
-            $where .= ' '.$key.' =:'.$key.' AND';
+        	if($forUpdate){
+				$where .= ' '.$key.' ='.$value.' AND';
+        	}else{
+            	$where .= ' '.$key.' =:'.$key.' AND';
+        	}
         }
         $where = rtrim($where, 'AND');
         return $where;

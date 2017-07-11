@@ -1,9 +1,9 @@
 <?php
-  require_once './core/autoLoadClass.php';
+    require_once './core/autoLoadClass.php';
     require_once './Database/dbHelper.php';
-    $questionID = base_convert($_GET["poll"],36,10);
+    $questionID = base_convert($_GET["result"],36,10);
     $dbHelp = new dbHelp;
-    $userAnswersAndCount = $dbHelp->select("Answers.answer,COUNT(userAnswers.userAnswerID) AS answerCount,Answers.questionID as questionID","Answers INNER JOIN userAnswers ON Answers.answerID = userAnswers.answerID GROUP BY Answers.answerID HAVING Answers.questionID = $questionID");
+    $userAnswersAndCount = $dbHelp->select("answer,votes","Answers",array("questionID"=>$questionID));
     $question = $dbHelp->select("question","Question",array("questionID"=>$questionID));
 ?>
 <html>
@@ -31,9 +31,13 @@
         data.addColumn('number', 'Slices');
         data.addRows([
           <?php
+          $sum = 0;
             foreach ($userAnswersAndCount as $key => $value) {
-              echo "['".$value["answer"]."',".$value['answerCount']."],";
+              $sum += $value['votes'];
+              echo "['".$value["answer"]."',".$value['votes']."],";
             }
+          if($sum == 0)
+            echo "['No Votes Yet',1]";
           ?>
         ]);
 
@@ -42,7 +46,8 @@
                        'width':900,
                        'height':700,
                         // 'colors':['#142B33', '#8C5261', '#3E6F7F', '#4C491E', '#CCC559'],
-                        'is3D':true
+                        'is3D':true,
+                        sliceVisibilityThreshold:0
                      };
 
         // Instantiate and draw our chart, passing in some options.

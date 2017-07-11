@@ -10,11 +10,8 @@ function createPoll($post){
 		$dbHelp->insert("Link",array("link" => $insertedLink,"questionID" => $insertedQuestionId));
 		foreach ($answers as $item) {
 			if(!empty($item))
-				$dbHelp->insert("Answers",array("answer"=>$item,"questionID"=>$insertedQuestionId));
+				$dbHelp->insert("Answers",array("answer"=>$item,"questionID"=>$insertedQuestionId,"votes" => 0));
 		}
-		// echo $link;
-		// echo base_convert($link,36,10)."</br>";
-		// print_r($smtng);
 		redirect::to("../link.php?link=$insertedLink");
   }else{
   	redirect::to("../index.php");
@@ -32,8 +29,11 @@ function generateLinks($get){
 function insertUserVote($postt){
 	if(!empty($postt)){
 		$dbHelp = new dbHelp;
+		$answerID = $postt['userAnswerID'];
 		$link = base_convert($postt["questionID"],10,36);
-$dbHelp->insert("userAnswers",array("answerID" => $postt["userAnswerID"],"questionID" => $postt["questionID"]));
-		redirect::to("../result.php?result=$link");
+		$votes = $dbHelp->select("votes","Answers",array("answerID" => $answerID));
+		$updateVotes = $dbHelp->update("Answers",array("votes" => ($votes[0]["votes"] + 1)),array("answerID" => $answerID));
+		if($updateVotes)
+			redirect::to("../result.php?result=$link");
 	}
 }
