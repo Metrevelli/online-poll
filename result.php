@@ -42,13 +42,12 @@
         ]);
 
         // Set chart options
-        var options = {'title':<?php echo "'".$question[0]["question"]."'" ?>,
-                       'width':900,
-                       'height':700,
-                        // 'colors':['#142B33', '#8C5261', '#3E6F7F', '#4C491E', '#CCC559'],
+        var options = { 'title':<?php echo "'".$question[0]["question"]."'" ?>,
+                        'width':900,
+                        'height':700,
                         'is3D':true,
                         sliceVisibilityThreshold:0
-                     };
+                      };
 
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
