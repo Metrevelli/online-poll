@@ -77,6 +77,13 @@ legend {
   font-size: 14px;
   padding-top: 120px;
 }
+.addAnswer{
+  float: left !important;
+  background-color: #008000 !important;
+}
+.addAnswer:active{
+  background-color: #000000 !important;
+}
 .voteButton{
   font-size: 20px;
   cursor: pointer;

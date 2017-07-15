@@ -20,6 +20,7 @@ require_once './func/functions.php';
 </fieldset>
 <input type="submit" name="submit" class="voteButton" value="Create Poll">
 </form>
+<input type="button" name="addInput" class="voteButton addAnswer" value="Add Answer">
 <?php
 	require_once './Includes/Partials/footer.php';
 ?>
