@@ -12,7 +12,18 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="vendor/components/jquery/jquery.js"></script>
     <script type="text/javascript">
+var  userAnswersArray = [];
+setInterval(function(){
+$.post( "Handlers/resultContentLoader.php", {questionID: <?=$questionID?> })
+  .done(function( data ) {
+    // alert( "Data Loaded: " + data );
+  // userAnswersArray = data;
 
+  userAnswersArray = $.parseJSON(data).join(",");
+  // userAnswersArray.push(userAnswersArray.join(","));
+  console.log($.type(userAnswersArray));
+  console.log(userAnswersArray);
+  })},1000);
 
       // Load the Visualization API and the corechart package.
       google.charts.load('current', {'packages':['corechart']});
@@ -26,20 +37,23 @@
       function drawChart() {
 
         // Create the data table.
-        var data = new google.visualization.DataTable();
+        var data = new google.visualization.arrayToDataTable(userAnswersArray);
         data.addColumn('string', 'Topping');
         data.addColumn('number', 'Slices');
-        data.addRows([
-          <?php
-          $sum = 0;
-            foreach ($userAnswersAndCount as $key => $value) {
-              $sum += $value['votes'];
-              echo "['".$value["answer"]."',".$value['votes']."],";
-            }
-          if($sum == 0)
-            echo "['No Votes Yet',1]";
-          ?>
-        ]);
+        data.addRows( userAnswersArray );
+        //   //   $.each(userAnswersArray, function(i, item) {
+        //   //       alert(item.answer);
+        //   // });
+        //   <?php
+        //   $sum = 0;
+        //     foreach ($userAnswersAndCount as $key => $value) {
+        //       $sum += $value['votes'];
+        //       echo "['".$value["answer"]."',".$value['votes']."],";
+        //     }
+        //   if($sum == 0)
+        //     echo "['No Votes Yet',1]";
+        //   ?>
+        // ]);
 
         // Set chart options
         var options = { 'title':<?php echo "'".$question[0]["question"]."'" ?>,
